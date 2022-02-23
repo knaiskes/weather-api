@@ -7,3 +7,11 @@ class Sensor(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.name, self.board)
+
+class Metrics(models.Model):
+    temperature = models.FloatField()
+    humidity = models.FloatField()
+    sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return 'Metrics by %s sensor' % self.sensor
