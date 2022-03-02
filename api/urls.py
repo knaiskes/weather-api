@@ -4,7 +4,7 @@ from api import views
 
 
 urlpatterns = [
-    path('sensors/', views.SensorList.as_view()),
+    path('sensors/', views.SensorList.as_view(), name='sensor_list'),
 ]
 
 
