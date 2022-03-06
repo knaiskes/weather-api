@@ -30,3 +30,9 @@ class SensorDetail(APIView):
             return Sensor.objects.get(pk=pk)
         except Sensor.DoesNotExist:
             raise Http404
+
+
+    def get(self, request, pk, format=None):
+        sensor = self.get_object(pk)
+        serializer = SensorSerializer(sensor)
+        return Response(serializer.data)
