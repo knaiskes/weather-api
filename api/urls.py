@@ -5,6 +5,7 @@ from api import views
 
 urlpatterns = [
     path('sensors/', views.SensorList.as_view(), name='sensor_list'),
+    path('sensors/<uuid:pk>', views.SensorDetail.as_view(), name='sensor_detail'),
 ]
 
 
