@@ -79,3 +79,10 @@ class SensorDetailTest(TestData):
         url = reverse('sensor_detail', kwargs={'pk': pk})
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_not_existing_sensor(self):
+        client = APIClient()
+        pk = '6f41df41-9eea-44cd-ac1e-2f4d22c3ac10' # some random uuid
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
