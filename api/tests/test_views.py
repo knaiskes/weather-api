@@ -72,3 +72,10 @@ class SensorDetailTest(TestData):
         url = reverse('sensor_detail', kwargs={'pk': pk})
         response = client.put(url, {'name': 'New Sensor', 'room': 'New Room'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_valid_sensor(self):
+        client = APIClient()
+        pk = self.sensor1.id
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
