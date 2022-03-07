@@ -27,3 +27,12 @@ class SensorListTest(TestData):
         url = reverse('sensor_list')
         response = client.post(url, {'name': 'Sensor1', 'room': 'Different Room', 'board': 'Esp32'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class SensorDetailTest(TestData):
+    def test_valid_get_sensor(self):
+        pk = self.sensor1.id
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        sensor = Sensor.objects.get(pk=pk)
+        serializer = SensorSerializer(sensor, many=True)
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
