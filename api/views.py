@@ -43,3 +43,8 @@ class SensorDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        sensor = self.get_object(pk)
+        sensor.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
