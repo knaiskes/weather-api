@@ -36,3 +36,15 @@ class SensorDetailTest(TestData):
         serializer = SensorSerializer(sensor, many=True)
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_get_sensor(self):
+        pk = '6f41df41-9eea-44cd-ac1e-2f4d22c3ac03' # some random uuid
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        sensor = Sensor()
+        # Test raised exception
+        with self.assertRaises(sensor.DoesNotExist):
+            sensor = Sensor.objects.get(pk=pk)
+        serializer = SensorSerializer(sensor, many=True)
+        response = self.client.get(url, format='json')
+        # Test response code
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
