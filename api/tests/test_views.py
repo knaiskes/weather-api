@@ -86,3 +86,12 @@ class SensorDetailTest(TestData):
         url = reverse('sensor_detail', kwargs={'pk': pk})
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+class MetricsDetailTest(TestData):
+    def test_get_metrics_url(self):
+        sensor = self.metrics1.sensor
+        url = reverse('metrics_detail', kwargs={'sensor': sensor})
+        metrics = Metrics.objects.filter(sensor__name=sensor)
+        serializer = SensorSerializer(metrics, many=True)
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
