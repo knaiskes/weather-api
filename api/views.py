@@ -1,5 +1,5 @@
-from api.models import Sensor
-from api.serializers import SensorSerializer
+from api.models import Sensor, Metrics
+from api.serializers import SensorSerializer, MetricsSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -48,3 +48,19 @@ class SensorDetail(APIView):
         sensor = self.get_object(pk)
         sensor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class MetricsDetail(APIView):
+    '''
+    GET metrics by (sensor) sensor
+    '''
+
+    def get_object(self, sensor):
+        try:
+            return Metrics.objects.filter(sensor__name=sensor)
+        except Metrics.DoesNotExist:
+            raise Http404
+
+    def get(self, request, sensor, format=None):
+        metrics = self.get_object(sensor)
+        serializer = MetricsSerializer(metrics, many=True)
+        return Response(serializer.data)
