@@ -1,3 +1,4 @@
+from rest_framework.permissions import IsAuthenticated
 from api.models import Sensor, Metrics
 from api.serializers import SensorSerializer, MetricsSerializer
 from rest_framework.views import APIView
@@ -6,6 +7,7 @@ from rest_framework import status
 from django.http import Http404
 
 class SensorList(APIView):
+    permission_classes = [IsAuthenticated]
     '''
     List all sensors or add a new one
     '''
@@ -22,6 +24,7 @@ class SensorList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SensorDetail(APIView):
+    permission_classes = [IsAuthenticated]
     '''
     GET, UPDATE and delete a sensor instance
     '''
@@ -50,6 +53,7 @@ class SensorDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 class MetricsDetail(APIView):
+    permission_classes = [IsAuthenticated]
     '''
     GET metrics by (sensor) sensor
     '''
