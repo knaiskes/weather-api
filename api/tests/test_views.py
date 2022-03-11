@@ -17,12 +17,26 @@ class SensorListTest(TestData):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_unauthorized_get_request(self):
+        client = APIClient()
+        url = reverse('sensor_list')
+        sensors = Sensor.objects.all()
+        serializer = SensorSerializer(sensors, many=True)
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_post_request(self):
         client = APIClient()
         client.credentials( HTTP_AUTHORIZATION='Token {}'.format(self.token1))
         url = reverse('sensor_list')
         response = client.post(url, {'name': 'Sensor3', 'room': 'Living Room', 'board': 'Esp32'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_anauthorized_post_request(self):
+        client = APIClient()
+        url = reverse('sensor_list')
+        response = client.post(url, {'name': 'Sensor3', 'room': 'Living Room', 'board': 'Esp32'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_post_sensor_bad_request(self):
         '''
@@ -45,6 +59,15 @@ class SensorDetailTest(TestData):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_valid_anauthorized_get_sensor(self):
+        client = APIClient()
+        pk = self.sensor1.id
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        sensor = Sensor.objects.get(pk=pk)
+        serializer = SensorSerializer(sensor, many=True)
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_invalid_get_sensor(self):
         client = APIClient()
         client.credentials( HTTP_AUTHORIZATION='Token {}'.format(self.token1))
@@ -66,6 +89,13 @@ class SensorDetailTest(TestData):
         url = reverse('sensor_detail', kwargs={'pk': pk})
         response = client.put(url, {'name': 'New Sensor', 'room': 'New Room', 'board': 'Esp8266'}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_anauthorized_put_request(self):
+        client = APIClient()
+        pk = self.sensor1.id
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        response = client.put(url, {'name': 'New Sensor', 'room': 'New Room', 'board': 'Esp8266'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_invalid_put_request(self):
         '''
@@ -94,6 +124,13 @@ class SensorDetailTest(TestData):
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+    def test_anauthorized_delete_sensor(self):
+        client = APIClient()
+        pk = self.sensor1.id
+        url = reverse('sensor_detail', kwargs={'pk': pk})
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_delete_not_existing_sensor(self):
         client = APIClient()
         client.credentials( HTTP_AUTHORIZATION='Token {}'.format(self.token1))
@@ -112,3 +149,12 @@ class MetricsDetailTest(TestData):
         serializer = SensorSerializer(metrics, many=True)
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_anauthorized_get_metrics(self):
+        client = APIClient()
+        sensor = self.metrics1.sensor
+        url = reverse('metrics_detail', kwargs={'sensor': sensor})
+        metrics = Metrics.objects.filter(sensor__name=sensor)
+        serializer = SensorSerializer(metrics, many=True)
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
