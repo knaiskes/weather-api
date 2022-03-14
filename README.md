@@ -61,5 +61,5 @@ $ curl -X GET http://localhost:8000/api/sensors/ -H 'Authorization: Token 8608ab
 | Path             | Method(s)        | Description                                                 |
 |------------------|------------------|-------------------------------------------------------------|
 | sensors/         | GET, POST        | Get all available sensor or add a new sensor                |
-| sensors/<uuid>   | GET, PUT, DELETE | Get, update or delete a sensor based on its uuid            |
-| metrics/<sensor> | GET              | Get all metrics from a particular sensor basend on its name |
+| sensors/*uuid*   | GET, PUT, DELETE | Get, update or delete a sensor based on its uuid            |
+| metrics/*sensor* | GET              | Get all metrics from a particular sensor basend on its name |
