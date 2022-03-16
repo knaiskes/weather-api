@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.timezone import now
 from rest_framework.authtoken.models import Token
 
 from django.db import models
@@ -19,6 +20,7 @@ class Metrics(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     temperature = models.FloatField()
     humidity = models.FloatField()
+    datetime = models.DateTimeField(auto_now=True)
     sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
 
     def __str__(self):
